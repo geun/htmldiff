@@ -189,13 +189,15 @@ module HTMLDiff
       tooltip = @old_words[operation.start_in_old...operation.end_in_old]
       words = text
 
+      tooltip_tag = extract_consecutive_words(tooltip) { |word| (img_tag?(word)) || (!tag?(word)) }
+
       loop do
         break if words.empty?
         # non_tags = extract_consecutive_words(words) { |word| not tag?(word) }
         # @content << wrap_text(non_tags.join, tagname, cssclass) unless non_tags.empty?
         non_tags = extract_consecutive_words(words) { |word| (img_tag?(word)) || (!tag?(word)) }
         # @content << wrap_text_with_span(non_tags.join, tagname, cssclass) unless non_tags.join.strip.empty?
-        @content << wrap_text_with_span(tooltip, non_tags.join) unless non_tags.join.strip.empty?
+        @content << wrap_text_with_span(tooltip_tag., non_tags.join) unless non_tags.join.strip.empty?
         # @content << wrap_text_with_span(non_tags.join, tagname, cssclass) unless non_tags.join.strip.empty?
 
         break if words.empty?
@@ -207,7 +209,7 @@ module HTMLDiff
 
     def wrap_text_with_span(old_text, new_text, tagname = 'span')
         # wrap_text(text, tagname, cssclass)
-      %(<a><#{tagname} tooltip="#{old_text.to_s}">#{new_text.to_s}</#{tagname}></a>)
+      %(<a><#{tagname} tooltip="#{old_text}">#{new_text.to_s}</#{tagname}></a>)
     end
     
     def insert(operation, tagclass = 'diffins')
