@@ -209,7 +209,7 @@ module HTMLDiff
 
     def wrap_text_with_span(old_text, new_text, tagname = 'span')
         # wrap_text(text, tagname, cssclass)
-      %(<a><#{tagname} tooltip="#{old_text}">#{new_text.to_s}</#{tagname}></a>)
+      %(<a><#{tagname} tooltip='#{old_text}'>#{new_text.to_s}</#{tagname}></a>)
     end
     
     def insert(operation, tagclass = 'diffins')
