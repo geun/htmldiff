@@ -285,7 +285,7 @@ module HTMLDiff
     #   %(<#{tagname} class="#{cssclass}">#{text}</#{tagname}>)
     # end
     def wrap_text(text, tagname, cssclass)
-      %(<#{tagname} class>#{text}</#{tagname}>)
+      %(<#{tagname} class="#{cssclass}">#{text}</#{tagname}>)
     end
 
 
