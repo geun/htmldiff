@@ -168,9 +168,44 @@ module HTMLDiff
       self.send operation.action, operation
     end
 
+    # def replace(operation)
+    #   delete(operation, 'diffmod')
+    #   insert(operation, 'diffmod')
+    # end
+
+
     def replace(operation)
-      delete(operation, 'diffmod')
-      insert(operation, 'diffmod')
+      # delete(operation, 'diffmod')
+      # insert(operation, 'diffmod')
+      # <a><span tooltip="old">new</span></a>
+
+
+      # insert_tag('ins', tagclass, @new_words[operation.start_in_new...operation.end_in_new])
+      # %(<#{tagname}>#{text}</#{tagname}>)
+      # def insert_tag(tagname, cssclass, words)
+      text = @new_words[operation.start_in_new...operation.end_in_new]
+      tooltip = @old_words[operation.start_in_old...operation.end_in_old]
+      words = text
+
+      loop do
+        break if words.empty?
+        # non_tags = extract_consecutive_words(words) { |word| not tag?(word) }
+        # @content << wrap_text(non_tags.join, tagname, cssclass) unless non_tags.empty?
+        non_tags = extract_consecutive_words(words) { |word| (img_tag?(word)) || (!tag?(word)) }
+        # @content << wrap_text_with_span(non_tags.join, tagname, cssclass) unless non_tags.join.strip.empty?
+        @content << wrap_text_with_span(tooltip, text) unless non_tags.join.strip.empty?
+        # @content << wrap_text_with_span(non_tags.join, tagname, cssclass) unless non_tags.join.strip.empty?
+
+        break if words.empty?
+        @content += extract_consecutive_words(words) { |word| tag?(word) }
+      end
+
+
+    end
+
+    def wrap_text_with_span(old_text, new_text, tagname = 'span')
+        # wrap_text(text, tagname, cssclass)
+      %(<a><#{tagname} tooltip="#{old_text}">#{new_text}</#{tagname}></a>)
     end
     
     def insert(operation, tagclass = 'diffins')
@@ -241,9 +276,14 @@ module HTMLDiff
       end
     end
 
+
+    # def wrap_text(text, tagname, cssclass)
+    #   %(<#{tagname} class="#{cssclass}">#{text}</#{tagname}>)
+    # end
     def wrap_text(text, tagname, cssclass)
-      %(<#{tagname} class="#{cssclass}">#{text}</#{tagname}>)
+      %(<#{tagname} class>#{text}</#{tagname}>)
     end
+
 
     def explode(sequence)
       sequence.is_a?(String) ? sequence.split("") : sequence
