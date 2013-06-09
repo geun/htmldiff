@@ -176,7 +176,7 @@ module HTMLDiff
 
     def replace(operation)
 
-      pp operation
+      # pp operation
       # delete(operation, 'diffmod')
       # insert(operation, 'diffmod')
       # <a><span tooltip="old">new</span></a>
